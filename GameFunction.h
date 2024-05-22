@@ -4,13 +4,14 @@
 #include<unordered_set>
 #include<time.h>
 #include <limits>
+#include<vector>
 using namespace std;
 
 class GameStart{
     private:
     char playAgain;
     int size=10;
-    int mines=8;
+    int mines=9;
     bool firstMove=true;
     char displayBoard[10][10];
     char board[10][10];
@@ -53,7 +54,7 @@ class GameStart{
             }else{
                 cout<<"\n\t\t  ---DEMNN YOU WON---\n";
             }
-            cout<<"\n\tWANNA GO AGAIN? (y/Y or anything to quit): ";
+            cout<<"\nWANNA GO AGAIN? (y/Y or anything to quit): ";
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             WannaPlayAgain();
@@ -124,7 +125,7 @@ class GameStart{
         void GenerateBoard(int a, int b){
             unordered_set<int>xSet;
             unordered_set<int>ySet;
-
+            srand(time(NULL));
             while(xSet.size()<mines){
                 int temp=rand()%10;
                 while(temp==a){
@@ -139,16 +140,16 @@ class GameStart{
                 }
                 ySet.insert(temp);
             }
-            int arr1[mines];
-            int arr2[mines];
+            vector<int>arr1;
+            vector<int>arr2;
             int m=0;
             int n=0;
             for(auto i:xSet){
-                arr1[m]=i;
+                arr1.push_back(i);
                 m++;
             }
             for(auto i:ySet){
-                arr2[n]=i;
+                arr2.push_back(i);
                 n++;
             }
             for(int i=0;i<mines;i++){
@@ -164,7 +165,6 @@ class GameStart{
             SetAdjancy(xR-1,yR-1);
             SetAdjancy(xR-1,yR+1);
             }
-            PrintBackBoard();
         }
 
 
