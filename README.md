@@ -21,4 +21,5 @@
 
  #### Running the Game
 After compiling the project, you can run the game by executing the following command:
-``` ./minesweeper ```
+
+  ``` ./minesweeper ```
