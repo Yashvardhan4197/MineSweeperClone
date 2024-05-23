@@ -7,104 +7,26 @@
 #include<vector>
 using namespace std;
 
-class GameStart{
-    private:
-    char playAgain;
-    int size=10;
-    int mines=9;
-    bool firstMove=true;
+
+class Board{
+    protected:
     char displayBoard[10][10];
     char board[10][10];
+    int size=10;
+    bool firstMove=true;
     public:
-        GameStart(){
-            cout<<"\n---GAME STARTS---\n";
-
-            SetBoard();
-            PrintBoard();
-            GameContinue();
-        }
-        bool WannaPlayAgain(){
-            cin>>playAgain;
-            if(playAgain=='y'||playAgain=='Y'){
-                return true;
-            }
-            return false;
-        }
-    private:
-        void GameContinue(){
-            bool notMine=true;
-            int a,b;
-            while(notMine==true&&BoxCount()>0){
-                cout<<"\nEnter Your Dimensions: \n";
-                cin>>a>>b;
-            if(a<10&&a>-1&&b<10&&b>-1){
-                ChangeBoard(a,b);
-                PrintBoard();
-                notMine=isItMine(a,b);
-            } 
-            else 
-            {   
-                cout<<"\n---Enter Valid Dimensions---\n";
-                cin.clear();
-                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            }
-            }
-            if(notMine==false){
-                cout<<"\n\t---YOU LOSER---\n";
-            }else{
-                cout<<"\n\t\t  ---DEMNN YOU WON---\n";
-            }
-            cout<<"\nWANNA GO AGAIN? (y/Y or anything to quit): ";
-            cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            WannaPlayAgain();
-        }
-        
-
-
-        void SetBoard(){
-            for(int i=0;i<size;i++){
+    Board(){
+        for(int i=0;i<size;i++){
                 for(int j=0;j<size;j++){
                     board[i][j]='0';
                     displayBoard[i][j]='B';
                 }
             }
-        }
-
-        bool isItMine(int a,int b){
-            if(displayBoard[a][b]=='X'){
-                return false;
-            }
-            return true;
-        }
-
-        int BoxCount(){
-            int total=0;
-            int count=0;
-            for(int i=0;i<size;i++){
-                for(int j=0;j<size;j++){
-                    if(displayBoard[i][j]=='B'){
-                        count++;
-                    }
-                }
-            }
-            total=count-mines;
-            return total;
-        }
-
-
-        void ChangeBoard(int a,int b){
-            if(firstMove==true){
-                GenerateBoard(a,b);
-                firstMove=false;
-            }
-            if(a>-1&&a<size&&b>-1&&b<size&&board[a][b]=='X'){
-                displayBoard[a][b]=board[a][b];
-            }else{
-            SetDisplayBoard(a,b);
-            }
-        }
-
+    }
+    public:
+    void SetMinesOnBoard(int a, int b){
+        board[a][b]='X';
+    }
 
         void SetDisplayBoard(int a, int b){
             if(a>-1&&a<size&&b>-1&&b<size&&displayBoard[a][b]=='B'){
@@ -122,54 +44,6 @@ class GameStart{
             }
         }
 
-        void GenerateBoard(int a, int b){
-            unordered_set<int>xSet;
-            unordered_set<int>ySet;
-            srand(time(NULL));
-            while(xSet.size()<mines){
-                int temp=rand()%10;
-                while(temp==a){
-                    temp=rand()%10;
-                }
-                xSet.insert(temp);
-            }
-            while(ySet.size()<mines){
-                int temp=rand()%10;
-                while(temp==b){
-                    temp=rand()%10;
-                }
-                ySet.insert(temp);
-            }
-            vector<int>arr1;
-            vector<int>arr2;
-            int m=0;
-            int n=0;
-            for(auto i:xSet){
-                arr1.push_back(i);
-                m++;
-            }
-            for(auto i:ySet){
-                arr2.push_back(i);
-                n++;
-            }
-            for(int i=0;i<mines;i++){
-            int xR=arr1[i];
-            int yR=arr2[i];    
-            board[xR][yR]='X';
-            SetAdjancy(xR+1,yR);
-            SetAdjancy(xR-1,yR);
-            SetAdjancy(xR,yR+1);
-            SetAdjancy(xR,yR-1);
-            SetAdjancy(xR+1,yR+1);
-            SetAdjancy(xR+1,yR-1);
-            SetAdjancy(xR-1,yR-1);
-            SetAdjancy(xR-1,yR+1);
-            }
-        }
-
-
-
-
         void SetAdjancy(int a, int b){
             int x=a;
             int y=b;
@@ -177,8 +51,6 @@ class GameStart{
                 board[x][y]=board[x][y]+1;
             }
             }
-
-
 
 
         void PrintBackBoard(){
@@ -216,6 +88,7 @@ class GameStart{
 
         }
 
+
         void PrintBoard(){
             cout<<endl;
             cout<<"    ";
@@ -252,4 +125,158 @@ class GameStart{
                 cout<<endl;
             }
         }
+
+};
+
+
+
+
+
+
+
+class Mine:public Board{
+    public:
+    int mines=9;
+    int getMinesNumber(){
+        return mines;
+    }
+
+    public:
+    bool isItMine(int a,int b){
+            if(displayBoard[a][b]=='X'){
+                return false;
+            }
+            return true;
+        }
+
+    int BoxCount(){
+            int total=0;
+            int count=0;
+            for(int i=0;i<size;i++){
+                for(int j=0;j<size;j++){
+                    if(displayBoard[i][j]=='B'){
+                        count++;
+                    }
+                }
+            }
+            total=count-mines;
+            return total;
+        }
+};
+
+
+class GameGeneration:public Mine{
+    public:
+
+    void ChangeBoard(int a,int b){
+            if(firstMove==true){
+                GenerateBoard(a,b);
+                firstMove=false;
+            }
+            if(a>-1&&a<size&&b>-1&&b<size&&board[a][b]=='X'){
+                displayBoard[a][b]=board[a][b];
+            }else{
+            SetDisplayBoard(a,b);
+            }
+        }
+
+
+    void GenerateBoard(int a, int b){
+            unordered_set<int>xSet;
+            unordered_set<int>ySet;
+            srand(time(NULL));
+            while(xSet.size()<mines){
+                int temp=rand()%10;
+                while(temp==a){
+                    temp=rand()%10;
+                }
+                xSet.insert(temp);
+            }
+            while(ySet.size()<mines){
+                int temp=rand()%10;
+                while(temp==b){
+                    temp=rand()%10;
+                }
+                ySet.insert(temp);
+            }
+            vector<int>arr1;
+            vector<int>arr2;
+            int m=0;
+            int n=0;
+            for(auto i:xSet){
+                arr1.push_back(i);
+                m++;
+            }
+            for(auto i:ySet){
+                arr2.push_back(i);
+                n++;
+            }
+            for(int i=0;i<mines;i++){
+            int xR=arr1[i];
+            int yR=arr2[i];  
+            SetMinesOnBoard(xR,yR);  
+            SetAdjancy(xR+1,yR);
+            SetAdjancy(xR-1,yR);
+            SetAdjancy(xR,yR+1);
+            SetAdjancy(xR,yR-1);
+            SetAdjancy(xR+1,yR+1);
+            SetAdjancy(xR+1,yR-1);
+            SetAdjancy(xR-1,yR-1);
+            SetAdjancy(xR-1,yR+1);
+            }
+        }
+};
+
+
+
+class GameStart{
+    private:
+    char playAgain;
+    GameGeneration generateGame;
+    public:
+    GameStart(){
+        cout<<"\n\t---GAME STARTS---\n";
+        generateGame.PrintBoard();
+        GameContinue();
+    }    
+
+    bool WannaPlayAgain(){
+            cin>>playAgain;
+            if(playAgain=='y'||playAgain=='Y'){
+                return true;
+            }
+            return false;
+        }
+    void GameContinue(){
+            bool notMine=true;
+            int a,b;
+            while(notMine==true&&generateGame.BoxCount()>0){
+                cout<<"\nEnter Your Dimensions: \n";
+                cin>>a>>b;
+            if(a<10&&a>-1&&b<10&&b>-1){
+                generateGame.ChangeBoard(a,b);
+                generateGame.PrintBoard();
+                notMine=generateGame.isItMine(a,b);
+            } 
+            else 
+            {   
+                cout<<"\n---Enter Valid Dimensions---\n";
+                cin.clear();
+                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }
+            }
+            if(notMine==false){
+                cout<<"\n\t     ---YOU LOSER---\n";
+                cout<<"\t These were the Locations: \n";
+                generateGame.PrintBackBoard();
+            }else{
+                cout<<"\n\t\t  ---DEMNN YOU WON---\n";
+            }
+
+            cout<<"\nWANNA GO AGAIN? (y/Y twice or anything twice to quit): ";
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            WannaPlayAgain();
+        }
+
 };
