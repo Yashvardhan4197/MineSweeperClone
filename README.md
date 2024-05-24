@@ -1,7 +1,7 @@
 # MineSweeperClone
 
-    Minesweeper Game
-    Find all the Tiles which do not have mines.
+- Minesweeper Game
+- Find all the Tiles which do not have mines.
 
 ### Features Implemented :
  - Game Win / Game Lose condition.
@@ -21,4 +21,5 @@
 
  #### Running the Game
 After compiling the project, you can run the game by executing the following command:
-- ./minesweeper
+
+  ``` ./minesweeper ```
