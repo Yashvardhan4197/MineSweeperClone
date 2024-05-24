@@ -17,7 +17,7 @@
   - Navigate to the project directory.
   - Run the following command to compile the project:
   
-- g++ -o minesweeper Main.cpp GameManager.h GameManager.cpp GameDescription.h GameDescription.cpp GameFunction.h GameFunction.cpp Board.h Board.cpp Mines.h Mines.cpp GameGeneration.h GameGeneration.cpp
+``` g++ -o minesweeper Main.cpp GameManager.h GameManager.cpp GameDescription.h GameDescription.cpp GameFunction.h GameFunction.cpp Board.h Board.cpp Mines.h Mines.cpp GameGeneration.h GameGeneration.cpp ```
 
  #### Running the Game
 After compiling the project, you can run the game by executing the following command:
